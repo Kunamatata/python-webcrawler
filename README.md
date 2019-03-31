@@ -1,4 +1,4 @@
-### Craigslist web crawler/web scraper in Pythons with Threads
+# Craigslist web crawler/web scraper in Pythons with Threads
 
 A fun experiment to crawl and scrape craigslist out of the need to find a car and wanting to automate the process. It uses threads to 
 

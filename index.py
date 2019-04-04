@@ -28,12 +28,13 @@ cur = conn.cursor()
 
 cars_sql = """
     CREATE TABLE if not exists cars (
-        "name"	text NOT NULL,
-        "price"	real NOT NULL,
-        "odometer"	real NOT NULL,
-        "url"	text NOT NULL,
+        "name"	        text NOT NULL,
+        "price"	        real NOT NULL,
+        "odometer"	    real NOT NULL,
+        "url"	        text NOT NULL,
         "title_status"	text NOT NULL,
         "time_posted"	text NOT NULL,
+        "location"      text,
         PRIMARY KEY(name, url)
     );
 """
@@ -113,20 +114,20 @@ class Crawler(Thread):
 
 def runThreads():
     thread1 = Crawler(DB_NAME, 0, conn)
-    # thread2 = Crawler(DB_NAME, 120, conn)
-    # thread3 = Crawler(DB_NAME, 240, conn)
+    thread2 = Crawler(DB_NAME, 120, conn)
+    thread3 = Crawler(DB_NAME, 240, conn)
     # thread4 = Crawler(DB_NAME, 360, conn)
 
     start = timeit.default_timer()
 
     thread1.start()
-    # thread2.start()
-    # thread3.start()
+    thread2.start()
+    thread3.start()
     # thread4.start()
 
     thread1.join()
-    # thread2.join()
-    # thread3.join()
+    thread2.join()
+    thread3.join()
     # thread4.join()
 
     end = timeit.default_timer()

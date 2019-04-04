@@ -8,6 +8,19 @@ from threading import Thread
 import requests
 from bs4 import BeautifulSoup
 
+
+parser = argparse.ArgumentParser(description="Craiglist crawler for vehicles")
+parser.add_argument('max_price', type=int, help='The maximum price for the car')
+parser.add_argument('max_miles', type=int, help="The maximum amount of miles on the car")
+parser.add_argument('location', type=str, help="The location for the search")
+
+args = parser.parse_args()
+
+MAX_PRICE = args.max_price
+MAX_AUTO_MILES = args.max_miles
+LOCATION = args.location
+
+
 DB_NAME = "craigslist-car.db"
 conn = sqlite3.connect(DB_NAME, check_same_thread=False)
 cur = conn.cursor()
@@ -27,19 +40,6 @@ cars_sql = """
 cur.execute(cars_sql)
 
 
-parser = argparse.ArgumentParser(description="Craiglist crawler for vehicles")
-parser.add_argument('max_price', type=int, help='The maximum price for the car')
-parser.add_argument('max_miles', type=int, help="The maximum amount of miles on the car")
-parser.add_argument('location', type=str, help="The location for the search")
-
-args = parser.parse_args()
-
-MAX_PRICE = args.max_price
-MAX_AUTO_MILES = args.max_miles
-LOCATION = args.location
-
-
-
 def selectAllCars():
     cur.execute("SELECT * from cars")
     rows = cur.fetchall()
@@ -57,9 +57,9 @@ class Crawler(Thread):
 
     def insertCar(self, name, price, odometer, url, title_status, time_posted):
         try:
-            car_sql = "INSERT INTO cars (name, price, odometer, url, title_status, time_posted) VALUES (?,?,?,?,?,?)"
+            car_sql = "INSERT INTO cars (name, price, odometer, url, title_status, time_posted, location) VALUES (?,?,?,?,?,?,?)"
             self.cur.execute(car_sql, (name, price, odometer,
-                                       url, title_status, time_posted))
+                                       url, title_status, time_posted, LOCATION))
         except sqlite3.Error as e:
             print(e)
 
